@@ -1,9 +1,9 @@
 import * as React from "react";
 import ReactResizeDetector from "react-resize-detector";
-import { MosaicGalleryImage } from "./components/image";
+import { JustifiedGalleryImage } from "./components/image";
 
-export interface IMosaicGalleryRowProps {
-  recalculatedRow: IMosaicGalleryCellProps[];
+export interface IJustifiedGalleryRowProps {
+  recalculatedRow: IJustifiedGalleryCellProps[];
   hasFreeSpace: boolean;
   height: number;
   prevRowsHeight: number;
@@ -12,12 +12,12 @@ export interface IMosaicGalleryRowProps {
   id: string;
 }
 
-export interface IMosaicGalleryProps {
-  data: IMosaicGalleryRowProps[];
+export interface IJustifiedGalleryProps {
+  data: IJustifiedGalleryRowProps[];
   viewportWidth: number;
 }
 
-export interface IMosaicGalleryCellProps {
+export interface IJustifiedGalleryCellProps {
   id: string;
   width: number;
   height: number;
@@ -30,17 +30,17 @@ export interface IMosaicGalleryCellProps {
   alt?: string;
 }
 
-const cellRenderer = (cell: IMosaicGalleryCellProps) => {
+const cellRenderer = (cell: IJustifiedGalleryCellProps) => {
   return (
     <div
-      className="mosaic-gallery__cell"
+      className="justified-gallery__cell"
       style={{
         width: `${cell.widthInPercent}%`,
         margin: cell.isLastCell ? `0 0 0.7% 0` : `0 0.7% 0.7% 0`
       }}
       key={cell.id}
     >
-      <MosaicGalleryImage src={cell.src} alt={cell.alt} />
+      <JustifiedGalleryImage src={cell.src} alt={cell.alt} />
       <div
         style={{
           paddingTop: `${cell.placeholderHeightInPercent}%`,
@@ -127,13 +127,13 @@ const VirtualizedGrid = props => {
 };
 
 // todo: перейти на FC-компонент
-export class MosaicGallery extends React.PureComponent<IMosaicGalleryProps> {
+export class JustifiedGallery extends React.PureComponent<IJustifiedGalleryProps> {
   public render() {
     const { data, viewportWidth } = this.props;
     return (
       <ReactResizeDetector handleWidth>
         {({ width }) => (
-          <div className="mosaic-gallery">
+          <div className="justified-gallery">
             <VirtualizedGrid
               numItems={data.length}
               rowHeight={index => data[index].height}

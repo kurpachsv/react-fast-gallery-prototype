@@ -1,14 +1,14 @@
 import * as React from "react";
-import { MosaicGallery } from "./mosaic-gallery/index";
+import { JustifiedGallery } from "./justified-gallery/index";
 
-import images from "../__mocks__/mosaic";
-import MosaicEngine from "./../packages/mosaic-engine";
+import images from "../__mocks__/justified";
+import JustifiedEngine from "./../packages/justified-engine";
 
 const VIEWPORT_WIDTH = 1000;
 
-const engine = new MosaicEngine();
+const engine = new JustifiedEngine();
 const data = engine.calculateGallery(images, VIEWPORT_WIDTH);
 
 export const App = () => (
-  <MosaicGallery data={data} viewportWidth={VIEWPORT_WIDTH} />
+  <JustifiedGallery data={data} viewportWidth={VIEWPORT_WIDTH} />
 );

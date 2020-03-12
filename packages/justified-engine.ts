@@ -1,6 +1,6 @@
 const nanoid = require("nanoid");
 
-class MosaicEngine {
+class JustifiedEngine {
   /* Get min height of row  */
   getRowMinHeight(items) {
     return Math.min.apply(
@@ -54,7 +54,7 @@ class MosaicEngine {
     });
   }
 
-  /* Calculate mosaic row sizes */
+  /* Calculate justified row sizes */
   calculateRow(items, viewportWidth) {
     const row = [];
     let totalRowWidth = 0;
@@ -83,7 +83,7 @@ class MosaicEngine {
     };
   }
 
-  /* Calculate mosaic gallery sizes */
+  /* Calculate justified gallery sizes */
   calculateGallery(items, viewportWidth) {
     const rows = [];
     let prevRowsHeight = 0;
@@ -96,4 +96,4 @@ class MosaicEngine {
     return rows;
   }
 }
-export default MosaicEngine;
+export default JustifiedEngine;
