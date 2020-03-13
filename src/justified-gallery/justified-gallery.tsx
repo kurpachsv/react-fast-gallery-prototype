@@ -1,6 +1,7 @@
 import * as React from "react";
 import ReactResizeDetector from "react-resize-detector";
 import { JustifiedGalleryImage } from "./components/image";
+import { getVisibleAreaData } from "./utils";
 
 export interface IJustifiedGalleryRowProps {
   recalculatedRow: IJustifiedGalleryCellProps[];
@@ -51,28 +52,6 @@ const cellRenderer = (cell: IJustifiedGalleryCellProps) => {
   );
 };
 
-const calculatePrevHeightWithGutters = (
-  index: number,
-  prevHeight: number,
-  gutterInPercent: number,
-  viewportSize: number,
-  screenSize: number
-) => {
-  const gutterInPx = (viewportSize * gutterInPercent) / 100;
-  const viewportAspectRatio = screenSize / viewportSize;
-  return viewportAspectRatio * (prevHeight + index * gutterInPx);
-};
-
-const calculateRowHeight = (
-  index: number,
-  rowHeight: (index: number) => number,
-  screenSize: number,
-  viewportSize: number
-) => {
-  const viewportAspectRatio = screenSize / viewportSize;
-  return viewportAspectRatio * rowHeight(index);
-};
-
 const VirtualizedGrid = props => {
   const {
     numItems,
@@ -81,30 +60,30 @@ const VirtualizedGrid = props => {
     areaHeight,
     screenWidth,
     viewportWidth,
-    prevRowsHeight
+    prevRowsHeight,
+    overScanRowCount
   } = props;
   const [scrollTop, setScrollTop] = React.useState(0);
   const items = [];
   for (let i = 0; i < numItems; i++) {
-    const prevHeight = calculatePrevHeightWithGutters(
+    const visibleAreaData = getVisibleAreaData(
+      scrollTop,
       i,
-      prevRowsHeight(i),
-      0.7,
+      prevRowsHeight,
+      rowHeight,
       viewportWidth,
-      screenWidth
+      screenWidth,
+      overScanRowCount,
+      numItems,
+      areaHeight
     );
-    const needRender =
-      scrollTop <
-        prevHeight +
-          calculateRowHeight(i, rowHeight, screenWidth, viewportWidth) &&
-      prevHeight - 1 < scrollTop + areaHeight;
-    if (needRender) {
+    if (visibleAreaData.needRender) {
       items.push(
         renderItem({
           index: i,
           style: {
             position: "absolute",
-            top: `${prevHeight}px`,
+            top: `${visibleAreaData.prevHeight}px`,
             width: "100%"
           }
         })
@@ -127,7 +106,9 @@ const VirtualizedGrid = props => {
 };
 
 // todo: перейти на FC-компонент
-export class JustifiedGallery extends React.PureComponent<IJustifiedGalleryProps> {
+export class JustifiedGallery extends React.PureComponent<
+  IJustifiedGalleryProps
+> {
   public render() {
     const { data, viewportWidth } = this.props;
     return (
@@ -143,13 +124,14 @@ export class JustifiedGallery extends React.PureComponent<IJustifiedGalleryProps
               viewportWidth={viewportWidth}
               renderItem={({ index, style }) => {
                 return (
-                  <div style={style}>
+                  <div style={style} key={data[index].id}>
                     {data[index].recalculatedRow.map(cell =>
                       cellRenderer(cell)
                     )}
                   </div>
                 );
               }}
+              overScanRowCount={2}
             />
           </div>
         )}

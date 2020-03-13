@@ -7,7 +7,15 @@ import JustifiedEngine from "./../packages/justified-engine";
 const VIEWPORT_WIDTH = 1000;
 
 const engine = new JustifiedEngine();
-const data = engine.calculateGallery(images, VIEWPORT_WIDTH);
+
+// clone images 1000 times
+const data = engine.calculateGallery(
+  Array.from(
+    { length: 1000 * images.length },
+    (_, i) => images[i % images.length]
+  ),
+  VIEWPORT_WIDTH
+);
 
 export const App = () => (
   <JustifiedGallery data={data} viewportWidth={VIEWPORT_WIDTH} />
