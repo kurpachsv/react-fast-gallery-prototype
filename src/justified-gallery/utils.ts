@@ -1,5 +1,5 @@
 // todo: перенести в engine
-const calculatePrevHeightWithGutters = (
+export const calculatePrevHeightWithGutters = (
   index: number,
   prevHeight: number,
   gutterInPercent: number,

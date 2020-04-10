@@ -1,7 +1,7 @@
 import * as React from "react";
 import ReactResizeDetector from "react-resize-detector";
 import { JustifiedGalleryImage } from "./components/image";
-import { getVisibleAreaData } from "./utils";
+import { getVisibleAreaData, calculatePrevHeightWithGutters } from "./utils";
 
 export interface IJustifiedGalleryRowProps {
   recalculatedRow: IJustifiedGalleryCellProps[];
@@ -61,7 +61,8 @@ const VirtualizedGrid = props => {
     screenWidth,
     viewportWidth,
     prevRowsHeight,
-    overScanRowCount
+    overScanRowCount,
+    totalHeight
   } = props;
   const [scrollTop, setScrollTop] = React.useState(0);
   const items = [];
@@ -94,10 +95,17 @@ const VirtualizedGrid = props => {
   const onScroll = e => setScrollTop(e.currentTarget.scrollTop);
 
   return (
-    <div className="scroll" style={{ overflowY: "scroll" }} onScroll={onScroll}>
+    <div
+      className="scroll"
+      style={{ overflowY: "scroll", height: `${areaHeight}px` }}
+      onScroll={onScroll}
+    >
       <div
         className="inner"
-        style={{ position: "relative", height: `${areaHeight}px` }}
+        style={{
+          position: "relative",
+          height: `${totalHeight}px`
+        }}
       >
         {items}
       </div>
@@ -132,6 +140,13 @@ export class JustifiedGallery extends React.PureComponent<
                 );
               }}
               overScanRowCount={2}
+              totalHeight={calculatePrevHeightWithGutters(
+                data.length - 1,
+                data[data.length - 1].prevRowsHeight,
+                0.7,
+                viewportWidth,
+                width
+              )}
             />
           </div>
         )}
