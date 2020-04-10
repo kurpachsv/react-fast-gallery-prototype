@@ -13,6 +13,7 @@ export const calculatePrevHeightWithGutters = (
   }
   return (
     viewportAspectRatio * (prevHeight + index * gutterInPx) -
+    // todo: проверить здесь
     ((index * gutterInPx) / 2 + 1)
   );
 };
