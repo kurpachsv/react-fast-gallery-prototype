@@ -6,16 +6,11 @@ export const calculatePrevHeightWithGutters = (
   viewportSize: number,
   screenSize: number
 ) => {
-  const gutterInPx = (viewportSize * gutterInPercent) / 100;
-  const viewportAspectRatio = screenSize / viewportSize;
   if (index === 0) {
     return 0;
   }
-  return (
-    viewportAspectRatio * (prevHeight + index * gutterInPx) -
-    // todo: проверить здесь
-    ((index * gutterInPx) / 2 + 1)
-  );
+  const viewportAspectRatio = screenSize / viewportSize;
+  return viewportAspectRatio * prevHeight;
 };
 
 const calculateRowHeight = (

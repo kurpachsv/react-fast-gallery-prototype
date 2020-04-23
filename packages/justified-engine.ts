@@ -31,13 +31,17 @@ class JustifiedEngine {
   recalculateRow(row, viewportWidth, hasFreeSpace) {
     // todo: тяжело читается метод -- надо разбить на 2-3
     const minHeight = this.getRowMinHeight(row);
-    const heightWithGutter =
-      (minHeight * (100 - (row.length - 1) * 0.7)) /* 0.7 is gutter in % */ /
-      100;
-    const items = row.map(item => this.resizeByHeight(item, minHeight));
-    const totalWidth = this.getRowTotalWidth(items);
-    const newRowHeight = (heightWithGutter * viewportWidth) / totalWidth;
-    return items.map((item, index) => {
+    const minHeightWithGutter = this.calculateMinHeightWithGutter(
+      minHeight,
+      row.length
+    );
+    const resizedRow = row.map(item => this.resizeByHeight(item, minHeight));
+    const newRowHeight = this.recalculateNewRowHeightWithGutter(
+      minHeightWithGutter,
+      resizedRow,
+      viewportWidth
+    );
+    return resizedRow.map((item, index) => {
       const cell = this.resizeByHeight(item, newRowHeight);
       const widthInPercent =
         (100 * (hasFreeSpace ? cell.originalWidth : cell.width)) /
@@ -52,6 +56,24 @@ class JustifiedEngine {
         isLastCell
       };
     });
+  }
+
+  /* Calculate min height with gutter */
+  calculateMinHeightWithGutter(rowMinHeight, rowLength) {
+    return (
+      (rowMinHeight * (100 - (rowLength - 1) * 0.7)) /* 0.7 is gutter in % */ /
+      100
+    );
+  }
+
+  /* Recalculate new row height with gutter by viewport width */
+  recalculateNewRowHeightWithGutter(
+    minHeightWithGutter,
+    resizedRow,
+    viewportWidth
+  ) {
+    const totalWidth = this.getRowTotalWidth(resizedRow);
+    return (minHeightWithGutter * viewportWidth) / totalWidth;
   }
 
   /* Calculate justified row sizes */
@@ -73,10 +95,12 @@ class JustifiedEngine {
       hasFreeSpace
     );
     const currentRowHeight = recalculatedRow[0].height;
+    const rowRatio = currentRowHeight / viewportWidth;
     return {
       recalculatedRow,
       height: currentRowHeight,
       width: totalRowWidth,
+      rowRatio,
       columnCount,
       hasFreeSpace,
       id: nanoid()
