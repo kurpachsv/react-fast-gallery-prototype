@@ -1,3 +1,5 @@
+export const SCROLLBAR_WIDTH = 15;
+
 // todo: перенести в engine
 export const calculatePrevHeightWithGutters = (
   index: number,
@@ -12,7 +14,8 @@ export const calculatePrevHeightWithGutters = (
   if (index === 0) {
     return 0;
   }
-  const viewportAspectRatio = screenSize / viewportSize;
+  const viewportAspectRatio =
+    (screenSize - SCROLLBAR_WIDTH) / (viewportSize - SCROLLBAR_WIDTH);
   return viewportAspectRatio * prevHeight;
 };
 
