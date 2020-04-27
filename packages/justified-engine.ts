@@ -31,11 +31,12 @@ class JustifiedEngine {
   recalculateRow(row, viewportWidth, hasFreeSpace) {
     // todo: тяжело читается метод -- надо разбить на 2-3
     const minHeight = this.getRowMinHeight(row);
+    const resizedRow = row.map(item => this.resizeByHeight(item, minHeight));
     const minHeightWithGutter = this.calculateMinHeightWithGutter(
       minHeight,
-      row.length
+      row.length,
+      0.7 /* 0.7 is gutter in % */
     );
-    const resizedRow = row.map(item => this.resizeByHeight(item, minHeight));
     const newRowHeight = this.recalculateNewRowHeightWithGutter(
       minHeightWithGutter,
       resizedRow,
@@ -59,11 +60,8 @@ class JustifiedEngine {
   }
 
   /* Calculate min height with gutter */
-  calculateMinHeightWithGutter(rowMinHeight, rowLength) {
-    return (
-      (rowMinHeight * (100 - (rowLength - 1) * 0.7)) /* 0.7 is gutter in % */ /
-      100
-    );
+  calculateMinHeightWithGutter(rowMinHeight, rowLength, gutterInPercent) {
+    return (rowMinHeight * (100 - (rowLength - 1) * gutterInPercent)) / 100;
   }
 
   /* Recalculate new row height with gutter by viewport width */
@@ -95,12 +93,10 @@ class JustifiedEngine {
       hasFreeSpace
     );
     const currentRowHeight = recalculatedRow[0].height;
-    const rowRatio = currentRowHeight / viewportWidth;
     return {
       recalculatedRow,
       height: currentRowHeight,
       width: totalRowWidth,
-      rowRatio,
       columnCount,
       hasFreeSpace,
       id: nanoid()
@@ -110,12 +106,13 @@ class JustifiedEngine {
   /* Calculate justified gallery sizes */
   calculateGallery(items, viewportWidth) {
     const rows = [];
+    const gutterInPx = (viewportWidth * 0.7) /* 0.7 is gutter in % */ / 100;
     let prevRowsHeight = 0;
 
     while (items.length > 0 && viewportWidth) {
       const calculatedRow = this.calculateRow(items, viewportWidth);
       rows.push({ ...calculatedRow, prevRowsHeight });
-      prevRowsHeight += calculatedRow.height;
+      prevRowsHeight += calculatedRow.height + gutterInPx;
     }
     return rows;
   }

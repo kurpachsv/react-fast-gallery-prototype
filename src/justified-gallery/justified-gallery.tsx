@@ -97,7 +97,7 @@ const VirtualizedGrid = props => {
   return (
     <div
       className="scroll"
-      style={{ overflowY: "scroll", height: `${areaHeight}px` }}
+      style={{ overflowY: "overlay", height: `${areaHeight}px` }}
       onScroll={onScroll}
     >
       <div
@@ -143,7 +143,7 @@ export class JustifiedGallery extends React.PureComponent<
               totalHeight={calculatePrevHeightWithGutters(
                 data.length - 1,
                 data[data.length - 1].prevRowsHeight,
-                0.7,
+                0,
                 viewportWidth,
                 width
               )}

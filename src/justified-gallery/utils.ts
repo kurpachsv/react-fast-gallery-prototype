@@ -6,6 +6,9 @@ export const calculatePrevHeightWithGutters = (
   viewportSize: number,
   screenSize: number
 ) => {
+  if (!screenSize) {
+    return 0;
+  }
   if (index === 0) {
     return 0;
   }
@@ -20,6 +23,9 @@ const calculateRowHeight = (
   screenSize: number,
   viewportSize: number
 ) => {
+  if (!screenSize) {
+    return 0;
+  }
   if (index < 0 || index >= numItems) {
     return 0;
   }
