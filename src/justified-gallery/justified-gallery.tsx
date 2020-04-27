@@ -143,7 +143,7 @@ export class JustifiedGallery extends React.PureComponent<
               totalHeight={calculatePrevHeightWithGutters(
                 data.length - 1,
                 data[data.length - 1].prevRowsHeight,
-                0,
+                0.7,
                 viewportWidth,
                 width
               )}
