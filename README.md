@@ -1,1 +1,1 @@
-# react-fast-gallery
+# react-fast-gallery-prototype

@@ -1,17 +1,19 @@
-import * as React from "react";
+import * as React from 'react'
 
 export interface IJustifiedGalleryImageProps {
-  src: string;
-  alt?: string;
+  src: string
+  alt?: string
 }
 
-export const JustifiedGalleryImage: React.FC<IJustifiedGalleryImageProps> = props => {
-  const { src, alt } = props;
-  return <img className="justified-gallery__image" src={src} alt={alt} />;
-};
+export const JustifiedGalleryImage: React.FC<IJustifiedGalleryImageProps> = (
+  props
+) => {
+  const { src, alt } = props
+  return <img className="justified-gallery__image" src={src} alt={alt} />
+}
 
 JustifiedGalleryImage.defaultProps = {
-  alt: ""
-};
+  alt: '',
+}
 
-JustifiedGalleryImage.displayName = "JustifiedGalleryImage";
+JustifiedGalleryImage.displayName = 'JustifiedGalleryImage'

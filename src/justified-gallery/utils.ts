@@ -1,4 +1,4 @@
-export const SCROLLBAR_WIDTH = 15;
+export const SCROLLBAR_WIDTH = 15
 
 // todo: перенести в engine
 export const calculatePrevHeightWithGutters = (
@@ -9,15 +9,15 @@ export const calculatePrevHeightWithGutters = (
   screenSize: number
 ) => {
   if (!screenSize) {
-    return 0;
+    return 0
   }
   if (index === 0) {
-    return 0;
+    return 0
   }
   const viewportAspectRatio =
-    (screenSize - SCROLLBAR_WIDTH) / (viewportSize - SCROLLBAR_WIDTH);
-  return viewportAspectRatio * prevHeight;
-};
+    (screenSize - SCROLLBAR_WIDTH) / (viewportSize - SCROLLBAR_WIDTH)
+  return viewportAspectRatio * prevHeight
+}
 
 const calculateRowHeight = (
   index: number,
@@ -27,14 +27,14 @@ const calculateRowHeight = (
   viewportSize: number
 ) => {
   if (!screenSize) {
-    return 0;
+    return 0
   }
   if (index < 0 || index >= numItems) {
-    return 0;
+    return 0
   }
-  const viewportAspectRatio = screenSize / viewportSize;
-  return viewportAspectRatio * rowHeight(index);
-};
+  const viewportAspectRatio = screenSize / viewportSize
+  return viewportAspectRatio * rowHeight(index)
+}
 
 // todo: прикрутить мемоизацию, так как много вычислений, НЕ зависящих от scrollTop внутри scrollTop
 const calculateOverScanHeights = (
@@ -45,8 +45,8 @@ const calculateOverScanHeights = (
   screenSize: number,
   viewportSize: number
 ) => {
-  let underHeight = 0;
-  let overHeight = 0;
+  let underHeight = 0
+  let overHeight = 0
   for (let i = index - overScanRowCount; i < index; i++) {
     underHeight += calculateRowHeight(
       i,
@@ -54,7 +54,7 @@ const calculateOverScanHeights = (
       rowHeight,
       screenSize,
       viewportSize
-    );
+    )
   }
   for (let j = index + 1; j <= index + overScanRowCount; j++) {
     overHeight += calculateRowHeight(
@@ -63,17 +63,17 @@ const calculateOverScanHeights = (
       rowHeight,
       screenSize,
       viewportSize
-    );
+    )
   }
   return {
     underHeight,
-    overHeight
-  };
-};
+    overHeight,
+  }
+}
 
 export interface IVisibleAreaData {
-  needRender: boolean;
-  prevHeight: number;
+  needRender: boolean
+  prevHeight: number
 }
 
 export const getVisibleAreaData = (
@@ -93,7 +93,7 @@ export const getVisibleAreaData = (
     0.7,
     viewportWidth,
     screenWidth
-  );
+  )
   const overScanHeights = calculateOverScanHeights(
     index,
     numItems,
@@ -101,20 +101,20 @@ export const getVisibleAreaData = (
     rowHeight,
     screenWidth,
     viewportWidth
-  );
+  )
   const currentRowHeight = calculateRowHeight(
     index,
     numItems,
     rowHeight,
     screenWidth,
     viewportWidth
-  );
+  )
   return {
     needRender:
       // элементы выше, чем позиция мыши (scrollTop) - запас вниз (overScanHeights.underHeight)
       scrollTop - overScanHeights.underHeight < prevHeight + currentRowHeight &&
       // элементы ниже, чем позиция мыши (scrollTop) + запас вверх (overScanHeights.overHeight) + область просмотра (areaHeight)
       prevHeight < scrollTop + overScanHeights.overHeight + areaHeight + 1,
-    prevHeight
-  };
-};
+    prevHeight,
+  }
+}

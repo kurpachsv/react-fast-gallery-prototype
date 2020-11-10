@@ -1,1 +1,1 @@
-export * from "./justified-gallery";
+export * from './justified-gallery'
